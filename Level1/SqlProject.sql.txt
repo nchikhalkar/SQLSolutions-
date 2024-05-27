@@ -1,0 +1,15 @@
+--Populate Property Address Data
+
+select *
+from Arboratestoredataforsql
+order by ParcelID
+----If a parcelid has an address and anothere parcelid does not have and address 
+--then we can populated by using firstparcelid address by using self join
+
+
+select a.ParcelID, a.PropertyAddress, b.ParcelID, b.PropertyAddress, isnull( a.PropertyAddress,b.PropertyAddress)
+from Arboratestoredataforsql a
+join Arboratestoredataforsql b
+on a.ParcelID = b.ParcelID
+and a.UniqueID <> b.UniqueID
+where a.PropertyAddress is null
