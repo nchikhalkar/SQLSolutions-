@@ -1,0 +1,169 @@
+## Name of the project :PizzaSales
+
+**A. KPI’s**
+
+**1. Total Revenue:**
+
+SELECT SUM(total_price) AS Total_Revenue FROM pizza_sales;
+
+https://lh7-us.googleusercontent.com/LBGHeUkmMUkyMVHkW1CxneN1fr_1wdg4jTIBomFjtzlNEYf0pepc70cev-do_okObqZr58IE1cM-GqQzzCFWpa2LsPpmVA8yIczk9-Gl-rgs6SjJNcsLA_PmSfuDlgXR_kjRLN-vMQg4iRGEkpZfkw
+
+**2. Average Order Value**
+
+SELECT (SUM(total_price) / COUNT(DISTINCT order_id)) AS Avg_order_Value FROM pizza_sales
+
+https://lh7-us.googleusercontent.com/p4px5XSB9SaSscMKpK7hDeDcM3DdpwhU38cor5Fmk433KJgI4p7_hVoSEK078d3jfs1GndjGH9k8CsWIVjoj7xD8NZhET7lUQgsuRlJTqJCYrTVwmI8b6sH6a7M90mnZSAh5bRhP8T7GEwxvo78_IA
+
+**3. Total Pizzas Sold**
+
+SELECT SUM(quantity) AS Total_pizza_sold FROM pizza_sales
+
+https://lh7-us.googleusercontent.com/VKW7XzdXZgwYSIx-bxZgKSh5MkvWSDV6WpTpEhNSBcgcFM2qa2BEOUDL5BFe9OH1b3lFNQuxH-AecVhFe8wtN-xw3rZGypHROlM3FwLtFx9qG3avWR7SPHs7h53xBg_0Srxm5FZ66wGUg52T_09LkQ
+
+**4. Total Orders**
+
+SELECT COUNT(DISTINCT order_id) AS Total_Orders FROM pizza_sales
+
+https://lh7-us.googleusercontent.com/5ZgYauH3Le0Me2NSODRSpkwysk8F6nqIMbORvm17ci1kZf7GeoLmC28XM5EWfp2xQsFvQ8IFsxZYjnrHZ8snflx4qSvJdiqePpsVGXqnXt3-k2WCX4uPwL0kn_LliAZAroXireNcBD_AjqQlcRqQrw
+
+**5. Average Pizzas Per Order**
+
+SELECT CAST(CAST(SUM(quantity) AS DECIMAL(10,2)) /
+
+CAST(COUNT(DISTINCT order_id) AS DECIMAL(10,2)) AS DECIMAL(10,2))
+
+AS Avg_Pizzas_per_order
+
+FROM pizza_sales
+
+https://lh7-us.googleusercontent.com/9Ii175Br0EaJATmN8HzOyAZ--Gl15k6A0ygfsp8KBA7HO6kFZzEQnnXQI5pXYVCpRBNYSk-1mVoG6BVrjppWDasFf-OGRANdBEUAYiaTF0VTIDzocSDpkQz0Ly3W7fE7o1KO1GU-17bj8VUiw6fAgw
+
+**B. Daily Trend for Total Orders**
+
+SELECT DATENAME(DW, order_date) AS order_day, COUNT(DISTINCT order_id) AS total_orders
+
+FROM pizza_sales
+
+GROUP BY DATENAME(DW, order_date)
+
+***Output:***
+
+https://lh7-us.googleusercontent.com/JSrQN9i8-JGlEgnLfAE4egtAIO0c-l2VRoSkDpHpUFVXLTcvluUcrPQOEAna_Wh9bVM1lVmX1angvNq6SeR9uUMGPeQ1Ewkv2mJkzwzsXe0wn5o9qg3kB3MEQYOXflPEIKOkaYsREr0aFXZlojXnig
+
+**C. Hourly Trend for Orders**
+
+SELECT DATEPART(HOUR, order_time) as order_hours, COUNT(DISTINCT order_id) as total_orders
+
+from pizza_sales
+
+group by DATEPART(HOUR, order_time)
+
+order by DATEPART(HOUR, order_time)
+
+***Output***
+
+https://lh7-us.googleusercontent.com/3Vog1RGXWF4IRzCN20_RtSKLAWNsWsZ0x4Y4FjH58DXc0NnOhCKua-LUOWmN3hAJ4R30wClJiYiHQTTyXs4YkOJGjC-oY0BFQCZP0cUFzq92Dq6ZgybJjX6FKZkg7RpDYt3d8PskuWwQ7Mof30OTKg
+
+**D. % of Sales by Pizza Category**
+
+SELECT pizza_category, CAST(SUM(total_price) AS DECIMAL(10,2)) as total_revenue,
+
+CAST(SUM(total_price) * 100 / (SELECT SUM(total_price) from pizza_sales) AS DECIMAL(10,2)) AS PCT
+
+FROM pizza_sales
+
+GROUP BY pizza_category
+
+***Output***
+
+https://lh7-us.googleusercontent.com/3m6Z1Wk6Wp1mTwyELjP68EeqfWlYpy42qHjfwu59zDXDUqy-Xju_hjearbD6AOaENORq7yTIiwzCMVXJtmny3bkrgoeOWp75GtHovFICFFfmMCpuQhOI2MIoW76IsXUlfOIIJMHojGPw7hgeae8uVQ
+
+**E. % of Sales by Pizza Size**
+
+SELECT pizza_size, CAST(SUM(total_price) AS DECIMAL(10,2)) as total_revenue,
+
+CAST(SUM(total_price) * 100 / (SELECT SUM(total_price) from pizza_sales) AS DECIMAL(10,2)) AS PCT
+
+FROM pizza_sales
+
+GROUP BY pizza_size
+
+ORDER BY pizza_size
+
+***Output***
+
+# 
+
+https://lh7-us.googleusercontent.com/97zTFbgsaTT34E1k4vbU65Ox5ofzv3Y3DO8Sj8WCUtG4TmC-bUTfhjmBZuE_rIMrvYUHBmahKIPRVFQStaA8Jt1AZf3TdT_66t4yj2QEIAOCwlFjz3GGSqA_ZxmHpWYK7bgWm_uHo119aahGBPld0w
+
+**F. Total Pizzas Sold by Pizza Category**
+
+SELECT pizza_category, SUM(quantity) as Total_Quantity_Sold
+
+FROM pizza_sales
+
+WHERE MONTH(order_date) = 2
+
+GROUP BY pizza_category
+
+ORDER BY Total_Quantity_Sold DESC
+
+***Output***
+
+# 
+
+https://lh7-us.googleusercontent.com/IlebBpHoai6fcrRNQ93a2gWwXhjqJ5k_SFCR0tigogN8h8MN0r2SVRi5XBj4lYuH8B1rAges6xCrt2YaapNK8zkB0R43MSk3YwYiXChoYQb0uj7iIWp-0UoyBB-ZOIIL7oyzVN0Mw4l6JBM1ALi21w
+
+**G. Top 5 Best Sellers by Total Pizzas Sold**
+
+SELECT Top 5 pizza_name, SUM(quantity) AS Total_Pizza_Sold
+
+FROM pizza_sales
+
+GROUP BY pizza_name
+
+ORDER BY Total_Pizza_Sold DESC
+
+***Output***
+
+# 
+
+https://lh7-us.googleusercontent.com/AU_NfrSpPqwj2ZUMhDFFvvnGbTObFPkD_Xr5qeFj9rECZmabONz6Ay40QjihmIaojYDdfUsD7dX_QdUWiaC553acvrCptZIY8mkmIlgL2EnkOrd4yHjjTjXrCpv6C4EfqLLx2OsRFvwavAUQTKQncw
+
+**H. Bottom 5 Best Sellers by Total Pizzas Sold**
+
+SELECT TOP 5 pizza_name, SUM(quantity) AS Total_Pizza_Sold
+
+FROM pizza_sales
+
+GROUP BY pizza_name
+
+ORDER BY Total_Pizza_Sold ASC
+
+***Output***
+
+https://lh7-us.googleusercontent.com/uS5q77qtt_ozK_DqTU0dTx6kpKjkG4PAwz3QV2qLLFSGRdYVlxrze0u2ghn4Sm4eJzcvRJVbGjBG3SYVcI-cQxUCRdcQzomJ9N1ri-Q77iIai7N15yy9vL7-70gYN2A9SN0QKEaEk0Ie8RFHOwCVeg
+
+***NOTE***
+
+If you want to apply the Month, Quarter, Week filters to the above queries you can use WHERE clause. Follow some of below examples
+
+SELECT DATENAME(DW, order_date) AS order_day, COUNT(DISTINCT order_id) AS total_orders
+
+FROM pizza_sales
+
+WHERE MONTH(order_date) = 1
+
+GROUP BY DATENAME(DW, order_date)
+
+- *Here MONTH(order_date) = 1 indicates that the output is for the month of January. MONTH(order_date) = 4 indicates output for Month of April.*
+
+SELECT DATENAME(DW, order_date) AS order_day, COUNT(DISTINCT order_id) AS total_orders
+
+FROM pizza_sales
+
+WHERE DATEPART(QUARTER, order_date) = 1
+
+GROUP BY DATENAME(DW, order_date)
+
+- *Here DATEPART(QUARTER, order_date) = 1 indicates that the output is for the Quarter 1. MONTH(order_date) = 3 indicates output for Quarter 3.*
